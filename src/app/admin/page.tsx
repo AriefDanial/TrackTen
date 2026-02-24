@@ -33,9 +33,10 @@ function MiniCalendar() {
   const last = new Date(year, month + 1, 0);
   const startPad = first.getDay();
   const daysInMonth = last.getDate();
-  const days = Array.from({ length: startPad }, () => null).concat(
-    Array.from({ length: daysInMonth }, (_, i) => i + 1)
-  );
+  const days: (number | null)[] = [
+    ...Array.from({ length: startPad }, () => null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
 
   const isToday = (d: number | null) =>
     d !== null && today.getDate() === d && today.getMonth() === month && today.getFullYear() === year;
