@@ -41,7 +41,7 @@ export async function GET(request: Request) {
     const presentStaffIds = new Set(staffWhoAttendedToday.map((a) => a.staffId));
 
     const staffWithDept = await prisma.staff.findMany({
-      where: { id: { in: [...presentStaffIds] } },
+      where: { id: { in: Array.from(presentStaffIds) } },
       select: { id: true, department: true },
     });
     const presentByDept = new Map<string, number>();
