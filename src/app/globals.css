@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Professional palette: red brand + white cards */
+  --bg: #991b1b;
+  --bg-elevated: #f8fafc;
+  --card: #ffffff;
+  --card-hover: #fafafa;
+  --border: #e5e7eb;
+  --border-accent: rgba(220, 38, 38, 0.3);
+  --text: #111827;
+  --text-muted: #6b7280;
+  --text-on-red: #ffffff;
+  --text-on-red-muted: rgba(255, 255, 255, 0.9);
+  --accent: #dc2626;
+  --accent-hover: #b91c1c;
+  --accent-light: rgba(220, 38, 38, 0.08);
+  --accent-glow: rgba(220, 38, 38, 0.12);
+  --gold: #b45309;
+  --gold-muted: rgba(245, 158, 11, 0.1);
+  --success: #059669;
+  --success-muted: rgba(5, 150, 105, 0.1);
+  --warning: #d97706;
+  --warning-muted: rgba(217, 119, 6, 0.1);
+  --error: #dc2626;
+
+  /* Typography */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.025em;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+@layer base {
+  h1, h2, h3 {
+    letter-spacing: var(--tracking-tight);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .heading-page {
+    @apply text-2xl font-semibold tracking-tight text-[var(--text-on-red)];
+    letter-spacing: -0.025em;
+  }
+  .heading-section {
+    @apply text-[var(--text)] font-semibold tracking-tight;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .label {
+    @apply text-[var(--text-muted)] font-medium;
+    font-size: 0.8125rem;
+  }
+  .input-base {
+    @apply w-full rounded-input border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2.5 text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-colors;
+    font-size: 0.9375rem;
+  }
+  .btn-primary {
+    @apply rounded-input font-semibold text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2;
+    font-size: 0.9375rem;
+  }
+  .card {
+    @apply rounded-card border border-[var(--border)] bg-white shadow-card transition-shadow hover:shadow-card-hover;
+  }
+
+  /* Admin dashboard (red theme) */
+  .admin-dashboard {
+    --admin-header: #1f2937;
+    --admin-sidebar-bg: #ffffff;
+    --admin-main-bg: #f9fafb;
+    --admin-accent: #dc2626;
+    --admin-accent-hover: #b91c1c;
+    --admin-card-yellow: #fef3c7;
+    --admin-card-yellow-text: #92400e;
+    --admin-card-green: #d1fae5;
+    --admin-card-green-text: #065f46;
+    --admin-card-red: #fee2e2;
+    --admin-card-red-text: #991b1b;
+  }
+
+  /* Staff dashboard (same layout, red accent) */
+  .staff-dashboard {
+    --staff-header: #1f2937;
+    --staff-sidebar-bg: #ffffff;
+    --staff-main-bg: #f9fafb;
+    --staff-accent: #dc2626;
+    --staff-accent-hover: #b91c1c;
+    --staff-card-yellow: #fef3c7;
+    --staff-card-yellow-text: #92400e;
+    --staff-card-green: #d1fae5;
+    --staff-card-green-text: #065f46;
+    --staff-card-red: #fee2e2;
+    --staff-card-red-text: #991b1b;
+  }
+}

@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Staff {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  passwordHash String?       // hashed password for staff login (required for new staff)
+  department   String        @default("CSO") // CSO, CSI, PMO, CST, CMT, Training, CBA
+  createdAt    DateTime      @default(now())
+  attendance   Attendance[]
+  applications Application[]
+}
+
+model Application {
+  id        String   @id @default(cuid())
+  staffId   String
+  staff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  type      String   // "leave" | "mc"
+  startDate DateTime
+  endDate   DateTime
+  reason    String?
+  status    String   @default("pending") // "pending" | "approved" | "rejected"
+  createdAt DateTime @default(now())
+}
+
+model Attendance {
+  id         String   @id @default(cuid())
+  staffId    String
+  staff      Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  type       String   // "check_in" | "check_out"
+  timestamp  DateTime @default(now())
+  latitude   Float?
+  longitude  Float?
+  address    String?  // optional reverse-geocoded address
+  createdAt  DateTime @default(now())
+}
