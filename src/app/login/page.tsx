@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 type LoginMode = "staff" | "admin";
 
-export default function LoginPage() {
+function LoginForm() {
   const searchParams = useSearchParams();
   const [mode, setMode] = useState<LoginMode>("staff");
   const [email, setEmail] = useState("");
@@ -179,5 +179,31 @@ export default function LoginPage() {
         )}
       </div>
     </div>
+  );
+}
+
+function LoginFallback() {
+  return (
+    <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-5 py-10">
+      <div className="w-full max-w-[22rem]">
+        <h1 className="text-[1.75rem] font-semibold tracking-tight text-[var(--text-on-red)] text-center" style={{ letterSpacing: "-0.03em" }}>
+          TrackTen
+        </h1>
+        <p className="text-[var(--text-on-red-muted)] text-[0.8125rem] font-medium text-center mt-1.5 mb-8">
+          Staff attendance & leave
+        </p>
+        <div className="card p-6 sm:p-8 text-center text-[var(--text-muted)] text-sm">
+          Loading…
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginFallback />}>
+      <LoginForm />
+    </Suspense>
   );
 }
