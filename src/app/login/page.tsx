@@ -115,7 +115,7 @@ function LoginForm() {
           </h2>
           <p className="text-[var(--text-muted)] text-[0.8125rem] mb-5">
             {mode === "staff"
-              ? "Sign in with your work email and password to clock in/out and submit leave or MC."
+              ? "Sign in with the email and password your administrator gave you to clock in/out and submit leave or MC."
               : "Enter the admin password to manage staff and applications."}
           </p>
           {registeredNotice && mode === "staff" && (
@@ -167,14 +167,7 @@ function LoginForm() {
           </div>
         </form>
 
-        {mode === "staff" ? (
-          <p className="text-center text-[var(--text-on-red-muted)] text-[0.8125rem] mt-6">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-white font-semibold hover:underline">
-              Create an account
-            </Link>
-          </p>
-        ) : (
+        {mode === "admin" && (
           <p className="text-center text-[var(--text-on-red-muted)] text-[0.8125rem] mt-6">
             Staff?{" "}
             <Link href="/login" className="text-white font-semibold hover:underline">
