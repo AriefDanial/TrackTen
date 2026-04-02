@@ -87,12 +87,14 @@ export default function AdminReportPage() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold text-[var(--text)] tracking-tight mb-1">Reports</h1>
-      <p className="text-[var(--text-muted)] text-sm mb-6">
-        Choose a date range and download a CSV or PDF summary of attendance and leave/MC applications, or preview counts below.
-      </p>
+      <div className="mb-8 max-w-3xl">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--text)] tracking-tight mb-2">Reports</h1>
+        <p className="text-[var(--text-muted)] text-sm leading-relaxed">
+          Choose a date range and download a CSV or PDF summary of attendance and leave/MC applications, or preview counts below.
+        </p>
+      </div>
 
-      <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5 mb-6 max-w-3xl">
+      <section className="surface-card p-5 sm:p-6 mb-6 max-w-3xl">
         <h2 className="font-semibold text-[var(--text)] mb-4">Date range</h2>
         <div className="flex flex-wrap items-end gap-4">
           <div>
@@ -123,21 +125,31 @@ export default function AdminReportPage() {
             type="button"
             onClick={() => loadPreview()}
             disabled={loading}
-            className="rounded-lg bg-gray-100 text-[var(--text)] px-4 py-2 text-sm font-medium hover:bg-gray-200 disabled:opacity-60"
+            className="btn-press rounded-xl bg-gray-100 text-[var(--text)] px-4 py-2.5 text-sm font-semibold hover:bg-gray-200 disabled:opacity-60 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-400"
           >
-            {loading ? "Loading…" : "Refresh preview"}
+            {loading ? (
+              <span className="inline-flex items-center gap-2">
+                <svg className="h-4 w-4 animate-spin motion-reduce:animate-none" fill="none" viewBox="0 0 24 24" aria-hidden>
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Loading…
+              </span>
+            ) : (
+              "Refresh preview"
+            )}
           </button>
           <button
             type="button"
             onClick={downloadCsv}
-            className="rounded-lg bg-[var(--admin-accent)] text-white px-4 py-2 text-sm font-medium hover:opacity-95"
+            className="btn-press rounded-xl bg-[var(--admin-accent)] text-white px-4 py-2.5 text-sm font-semibold shadow-lg shadow-red-500/25 hover:brightness-105 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--admin-accent)] focus-visible:ring-offset-2"
           >
             Download CSV
           </button>
           <button
             type="button"
             onClick={downloadPdf}
-            className="rounded-lg border border-[var(--admin-accent)] text-[var(--admin-accent)] px-4 py-2 text-sm font-medium hover:bg-[var(--admin-accent)]/10"
+            className="btn-press rounded-xl border-2 border-[var(--admin-accent)] text-[var(--admin-accent)] px-4 py-2.5 text-sm font-semibold hover:bg-[var(--admin-accent)]/10 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--admin-accent)] focus-visible:ring-offset-2"
           >
             Download PDF
           </button>
@@ -146,7 +158,7 @@ export default function AdminReportPage() {
       </section>
 
       {data && !error && (
-        <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm overflow-hidden max-w-3xl">
+        <section className="surface-card overflow-hidden max-w-3xl">
           <div className="px-5 py-4 border-b border-[var(--border)]">
             <h2 className="font-semibold text-[var(--text)]">Summary</h2>
             <p className="text-[var(--text-muted)] text-xs mt-0.5">

@@ -71,37 +71,42 @@ export default function AdminApplicationsPage() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold text-[var(--text)] tracking-tight mb-1">
-        Leave & MC applications
-      </h1>
-      <p className="text-[var(--text-muted)] text-sm mb-6">
-        Approve or reject staff leave and medical certificate applications.
-        {pendingCount > 0 && (
-          <span className="ml-1 font-semibold text-[var(--admin-accent)]">{pendingCount} pending</span>
-        )}
-      </p>
+      <div className="mb-8">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--text)] tracking-tight mb-2">Leave & MC applications</h1>
+        <p className="text-[var(--text-muted)] text-sm max-w-2xl leading-relaxed">
+          Approve or reject staff leave and medical certificate applications.
+          {pendingCount > 0 && (
+            <span className="ml-2 inline-flex items-center rounded-full bg-red-50 px-2.5 py-0.5 text-sm font-semibold text-[var(--admin-accent)] ring-1 ring-red-200/80">
+              {pendingCount} pending
+            </span>
+          )}
+        </p>
+      </div>
 
       {message && (
-        <p
-          className={`mb-4 text-sm ${
-            message.type === "ok" ? "text-[var(--success)]" : "text-[var(--error)]"
+        <div
+          role="status"
+          className={`mb-4 rounded-xl border px-4 py-3 text-sm font-medium transition-all duration-300 ${
+            message.type === "ok"
+              ? "border-emerald-200/80 bg-emerald-50 text-emerald-800"
+              : "border-red-200/80 bg-red-50 text-red-800"
           }`}
         >
           {message.text}
-        </p>
+        </div>
       )}
 
       {/* Filter */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-6 p-1 rounded-2xl bg-gray-100/90 ring-1 ring-gray-200/80 w-fit max-w-full">
         {(["pending", "approved", "rejected", "all"] as const).map((f) => (
           <button
             key={f}
             type="button"
             onClick={() => setFilter(f)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
+            className={`btn-press px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--admin-accent)] focus-visible:ring-offset-2 ${
               filter === f
-                ? "bg-[var(--admin-accent)] text-white"
-                : "bg-white border border-[var(--border)] text-[var(--text-muted)] hover:bg-gray-50"
+                ? "bg-white text-[var(--admin-accent)] shadow-md shadow-black/5 ring-1 ring-gray-200/80"
+                : "text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-white/60"
             }`}
           >
             {f.charAt(0).toUpperCase() + f.slice(1)}
@@ -109,9 +114,13 @@ export default function AdminApplicationsPage() {
         ))}
       </div>
 
-      <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm overflow-hidden">
+      <section className="surface-card overflow-hidden">
         {loading ? (
-          <p className="text-[var(--text-muted)] text-sm p-6">Loading…</p>
+          <div className="p-8 space-y-3 animate-pulse">
+            <div className="h-4 bg-gray-200 rounded w-3/4" />
+            <div className="h-4 bg-gray-200 rounded w-1/2" />
+            <div className="h-4 bg-gray-200 rounded w-5/6" />
+          </div>
         ) : filtered.length === 0 ? (
           <p className="text-[var(--text-muted)] text-sm p-6">
             No {filter === "all" ? "" : filter} applications.
@@ -131,7 +140,7 @@ export default function AdminApplicationsPage() {
               </thead>
               <tbody>
                 {filtered.map((a) => (
-                  <tr key={a.id} className="border-t border-[var(--border)] hover:bg-gray-50/50">
+                  <tr key={a.id} className="border-t border-[var(--border)] hover:bg-red-50/40 transition-colors duration-150">
                     <td className="px-5 py-3">
                       <p className="font-medium text-[var(--text)]">{a.staff.name}</p>
                       <p className="text-xs text-[var(--text-muted)]">{a.staff.email}</p>
@@ -167,7 +176,7 @@ export default function AdminApplicationsPage() {
                             type="button"
                             onClick={() => updateStatus(a.id, "approved")}
                             disabled={updatingId === a.id}
-                            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-[var(--admin-accent)] text-white hover:opacity-90 disabled:opacity-50 transition"
+                            className="btn-press px-3 py-1.5 rounded-lg text-sm font-semibold bg-[var(--admin-accent)] text-white shadow-md shadow-red-500/20 hover:brightness-105 disabled:opacity-50 transition-all duration-200"
                           >
                             {updatingId === a.id ? "…" : "Approve"}
                           </button>
@@ -175,7 +184,7 @@ export default function AdminApplicationsPage() {
                             type="button"
                             onClick={() => updateStatus(a.id, "rejected")}
                             disabled={updatingId === a.id}
-                            className="px-3 py-1.5 rounded-lg text-sm font-medium bg-red-600 text-white hover:opacity-90 disabled:opacity-50 transition"
+                            className="btn-press px-3 py-1.5 rounded-lg text-sm font-semibold bg-red-600 text-white shadow-md shadow-red-900/10 hover:brightness-105 disabled:opacity-50 transition-all duration-200"
                           >
                             Reject
                           </button>
@@ -193,8 +202,11 @@ export default function AdminApplicationsPage() {
             <button
               type="button"
               onClick={fetchApplications}
-              className="text-sm text-[var(--admin-accent)] font-medium hover:underline"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--admin-accent)] rounded-lg px-2 py-1 hover:bg-red-50 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--admin-accent)]"
             >
+              <svg className="h-4 w-4 transition-transform duration-500 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
               Refresh
             </button>
           </div>

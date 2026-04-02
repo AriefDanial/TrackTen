@@ -134,15 +134,15 @@ export default function AdminStaffPage() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold text-[var(--text)] tracking-tight mb-1">
-        Manage staff
-      </h1>
-      <p className="text-[var(--text-muted)] text-sm mb-6">
-        Add new staff or remove staff. Removed staff and their attendance history will be deleted.
-      </p>
+      <div className="mb-8">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--text)] tracking-tight mb-2">Manage staff</h1>
+        <p className="text-[var(--text-muted)] text-sm max-w-2xl leading-relaxed">
+          Add new staff or remove staff. Removed staff and their attendance history will be deleted.
+        </p>
+      </div>
 
       {/* Add staff form */}
-      <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6 sm:p-8 mb-8">
+      <section className="surface-card p-6 sm:p-8 mb-8">
         <h2 className="font-semibold text-[var(--text)] mb-5">Add new staff</h2>
         <form onSubmit={handleAddStaff} className="space-y-5">
           <div>
@@ -202,7 +202,7 @@ export default function AdminStaffPage() {
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2.5 rounded-lg font-semibold text-white bg-[var(--admin-accent)] hover:bg-[var(--admin-accent-hover)] disabled:opacity-50 transition"
+            className="btn-press px-6 py-2.5 rounded-xl font-semibold text-white bg-[var(--admin-accent)] hover:bg-[var(--admin-accent-hover)] disabled:opacity-50 shadow-lg shadow-red-500/20 transition-all duration-200"
           >
             {loading ? "Adding…" : "Add staff"}
           </button>
@@ -210,8 +210,8 @@ export default function AdminStaffPage() {
       </section>
 
       {/* Staff list */}
-      <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-[var(--border)]">
+      <section className="surface-card overflow-hidden">
+        <div className="px-5 py-4 border-b border-[var(--border)] bg-gray-50/50">
           <h2 className="font-semibold text-[var(--text)]">All staff ({staff.length})</h2>
         </div>
         {staff.length === 0 ? (
@@ -238,7 +238,7 @@ export default function AdminStaffPage() {
             </thead>
             <tbody>
               {staff.map((s) => (
-                <tr key={s.id} className="border-t border-[var(--border)] hover:bg-gray-50/50">
+                <tr key={s.id} className="border-t border-[var(--border)] hover:bg-red-50/40 transition-colors duration-150">
                   <td className="px-5 py-3 font-medium text-[var(--text)]">{s.name}</td>
                   <td className="px-5 py-3 text-[var(--text-muted)]">{s.email}</td>
                   <td className="px-5 py-3 text-[var(--text-muted)]">{s.department ?? "—"}</td>

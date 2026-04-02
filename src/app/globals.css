@@ -40,6 +40,17 @@ body {
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @layer base {
   h1, h2, h3 {
     letter-spacing: var(--tracking-tight);
@@ -64,15 +75,21 @@ body {
     font-size: 0.8125rem;
   }
   .input-base {
-    @apply w-full rounded-input border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2.5 text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-colors;
+    @apply w-full rounded-input border border-[var(--border)] bg-[var(--bg-elevated)] px-3 py-2.5 text-[var(--text)] placeholder-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:border-transparent transition-[color,box-shadow,border-color] duration-200 ease-out;
     font-size: 0.9375rem;
   }
   .btn-primary {
-    @apply rounded-input font-semibold text-white transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2;
+    @apply rounded-input font-semibold text-white transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2 active:scale-[0.98] disabled:active:scale-100;
     font-size: 0.9375rem;
   }
   .card {
-    @apply rounded-card border border-[var(--border)] bg-white shadow-card transition-shadow hover:shadow-card-hover;
+    @apply rounded-card border border-[var(--border)] bg-white shadow-card transition-all duration-300 ease-out hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+  .surface-card {
+    @apply rounded-2xl border border-[var(--border)] bg-white shadow-sm transition-all duration-300 ease-out hover:shadow-lift hover:border-gray-300/90;
+  }
+  .btn-press {
+    @apply transition-transform duration-150 ease-out active:scale-[0.98] disabled:active:scale-100;
   }
 
   /* Admin dashboard (red theme) */

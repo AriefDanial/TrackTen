@@ -40,16 +40,26 @@ function MiniCalendar() {
     d !== null && today.getDate() === d && today.getMonth() === month && today.getFullYear() === year;
 
   return (
-    <div className="bg-white rounded-xl border border-[var(--border)] p-4 shadow-sm">
+    <div className="surface-card p-4">
       <div className="flex items-center justify-between mb-4">
         <span className="font-semibold text-[var(--text)] text-sm">
           {date.toLocaleDateString("en-US", { month: "short", year: "numeric" })}
         </span>
         <div className="flex gap-1">
-          <button type="button" onClick={() => setDate(new Date(year, month - 1))} className="p-1 rounded hover:bg-gray-100 text-gray-500">
+          <button
+            type="button"
+            onClick={() => setDate(new Date(year, month - 1))}
+            className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-all duration-200 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--staff-accent)]"
+            aria-label="Previous month"
+          >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
           </button>
-          <button type="button" onClick={() => setDate(new Date(year, month + 1))} className="p-1 rounded hover:bg-gray-100 text-gray-500">
+          <button
+            type="button"
+            onClick={() => setDate(new Date(year, month + 1))}
+            className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-all duration-200 active:scale-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--staff-accent)]"
+            aria-label="Next month"
+          >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
           </button>
         </div>
@@ -59,7 +69,13 @@ function MiniCalendar() {
         {days.map((d, i) => (
           <div key={i} className="aspect-square flex items-center justify-center">
             {d === null ? <span /> : (
-              <span className={`w-7 h-7 flex items-center justify-center rounded-full ${isToday(d) ? "bg-[var(--staff-accent)] text-white font-semibold" : "text-[var(--text)] hover:bg-gray-100 rounded-full"}`}>
+              <span
+                className={`w-8 h-8 flex items-center justify-center rounded-full text-sm transition-all duration-200 ${
+                  isToday(d)
+                    ? "bg-[var(--staff-accent)] text-white font-semibold shadow-md shadow-red-500/30 scale-105"
+                    : "text-[var(--text)] hover:bg-gray-100 hover:scale-110 active:scale-95"
+                }`}
+              >
                 {d}
               </span>
             )}
@@ -190,54 +206,119 @@ export default function StaffDashboardPage() {
 
   return (
     <>
-      <h1 className="text-2xl font-semibold text-[var(--text)] tracking-tight mb-1">Staff Attendance</h1>
-      <p className="text-[var(--text-muted)] text-sm mb-6">
-        Clock in/out and submit leave or MC. Logged in as {currentStaff ? `${currentStaff.name} (${currentStaff.email})` : "…"}.
-      </p>
+      <div className="mb-8">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--text)] tracking-tight mb-2">Staff Attendance</h1>
+        <p className="text-[var(--text-muted)] text-sm max-w-2xl leading-relaxed">
+          Clock in/out and submit leave or MC.{" "}
+          <span className="text-[var(--text)] font-medium">
+            {currentStaff ? `${currentStaff.name}` : "…"}
+          </span>
+          {currentStaff && <span className="text-[var(--text-muted)]"> · {currentStaff.email}</span>}
+        </p>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           {/* Live time */}
-          <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6 text-center">
-            <p className="text-[var(--text-muted)] text-xs uppercase tracking-widest font-medium mb-2">Live time</p>
-            <p className="text-3xl font-semibold text-[var(--staff-accent)] tabular-nums tracking-tight">
+          <section className="relative overflow-hidden rounded-2xl border border-gray-200/80 bg-gradient-to-br from-white via-white to-gray-50/80 p-8 text-center shadow-sm ring-1 ring-gray-200/60 transition-shadow duration-300 hover:shadow-accent-glow">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(220,38,38,0.06),transparent_55%)] pointer-events-none" aria-hidden />
+            <p className="relative text-[var(--text-muted)] text-xs uppercase tracking-[0.2em] font-semibold mb-3">Live time</p>
+            <p className="relative text-4xl sm:text-5xl font-bold text-[var(--staff-accent)] tabular-nums tracking-tight drop-shadow-sm">
               {liveTime || "—:—:—"}
             </p>
-            <p className="text-[var(--text-muted)] text-sm mt-2 font-medium" suppressHydrationWarning>
+            <p className="relative text-[var(--text-muted)] text-sm mt-3 font-medium" suppressHydrationWarning>
               {mounted ? new Date().toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "\u00A0"}
             </p>
           </section>
 
           {/* Record attendance */}
-          <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6">
-            <h2 className="font-semibold text-[var(--text)] mb-4">Record attendance</h2>
-            <div className="space-y-4">
+          <section className="surface-card p-6 sm:p-8">
+            <h2 className="font-semibold text-[var(--text)] text-lg mb-5">Record attendance</h2>
+            <div className="space-y-5">
               <div>
-                <p className="text-sm font-medium text-[var(--text-muted)] mb-2">Type</p>
-                <div className="flex gap-5">
-                  <label className="flex items-center gap-2 cursor-pointer text-[var(--text)] text-sm">
-                    <input type="radio" name="type" checked={type === "check_in"} onChange={() => setType("check_in")} className="accent-[var(--staff-accent)] w-4 h-4" />
+                <p className="text-sm font-medium text-[var(--text-muted)] mb-3">Type</p>
+                <div className="inline-flex p-1 rounded-xl bg-gray-100/90 ring-1 ring-gray-200/80 gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setType("check_in")}
+                    className={`relative px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--staff-accent)] focus-visible:ring-offset-2 ${
+                      type === "check_in"
+                        ? "bg-white text-[var(--staff-accent)] shadow-md shadow-black/5 ring-1 ring-gray-200/80"
+                        : "text-gray-600 hover:text-[var(--text)]"
+                    }`}
+                  >
                     Check in
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer text-[var(--text)] text-sm">
-                    <input type="radio" name="type" checked={type === "check_out"} onChange={() => setType("check_out")} className="accent-[var(--staff-accent)] w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setType("check_out")}
+                    className={`relative px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--staff-accent)] focus-visible:ring-offset-2 ${
+                      type === "check_out"
+                        ? "bg-white text-[var(--staff-accent)] shadow-md shadow-black/5 ring-1 ring-gray-200/80"
+                        : "text-gray-600 hover:text-[var(--text)]"
+                    }`}
+                  >
                     Check out
-                  </label>
+                  </button>
                 </div>
               </div>
-              <p className="text-[var(--text-muted)] text-sm">Your location will be captured when you submit.</p>
-              {message && <p className={`text-sm font-medium ${message.type === "ok" ? "text-[var(--success)]" : "text-[var(--error)]"}`}>{message.text}</p>}
-              <button onClick={submitAttendance} disabled={loading} className="w-full py-3 rounded-lg font-semibold text-white bg-[var(--staff-accent)] hover:bg-[var(--staff-accent-hover)] disabled:opacity-50 transition">
-                {loading ? "Getting location & submitting…" : "Submit attendance"}
+              <p className="text-[var(--text-muted)] text-sm flex items-start gap-2">
+                <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-500 text-xs font-bold">i</span>
+                Your location will be captured when you submit.
+              </p>
+              {message && (
+                <div
+                  role="status"
+                  className={`rounded-xl px-4 py-3 text-sm font-medium border transition-all duration-300 ${
+                    message.type === "ok"
+                      ? "bg-emerald-50 text-emerald-800 border-emerald-200/80"
+                      : "bg-red-50 text-red-800 border-red-200/80"
+                  }`}
+                >
+                  {message.text}
+                </div>
+              )}
+              <button
+                type="button"
+                onClick={submitAttendance}
+                disabled={loading}
+                className="btn-press w-full py-3.5 rounded-xl font-semibold text-white bg-[var(--staff-accent)] hover:bg-[var(--staff-accent-hover)] disabled:opacity-50 shadow-lg shadow-red-500/20 hover:shadow-xl hover:shadow-red-500/25 transition-all duration-200"
+              >
+                {loading ? (
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <svg className="h-5 w-5 animate-spin motion-reduce:animate-none" fill="none" viewBox="0 0 24 24" aria-hidden>
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Getting location…
+                  </span>
+                ) : (
+                  "Submit attendance"
+                )}
               </button>
             </div>
           </section>
 
           {/* Recent attendance */}
-          <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm overflow-hidden">
-            <div className="flex justify-between items-center px-5 py-4 border-b border-[var(--border)]">
+          <section className="surface-card overflow-hidden">
+            <div className="flex justify-between items-center px-5 py-4 border-b border-[var(--border)] bg-gray-50/50">
               <h2 className="font-semibold text-[var(--text)]">Recent attendance</h2>
-              <button type="button" onClick={fetchAttendance} className="text-sm font-medium text-[var(--staff-accent)] hover:underline">Refresh</button>
+              <button
+                type="button"
+                onClick={fetchAttendance}
+                className="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--staff-accent)] rounded-lg px-2 py-1 -mr-2 hover:bg-red-50 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--staff-accent)]"
+              >
+                <svg
+                  className="h-4 w-4 transition-transform duration-500 group-hover:rotate-180 group-active:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refresh
+              </button>
             </div>
             <div className="overflow-x-auto max-h-64">
               {attendance.length === 0 ? (
@@ -253,7 +334,7 @@ export default function StaffDashboardPage() {
                   </thead>
                   <tbody>
                     {attendance.slice(0, 15).map((r) => (
-                      <tr key={r.id} className="border-t border-[var(--border)] hover:bg-gray-50/50">
+                      <tr key={r.id} className="border-t border-[var(--border)] hover:bg-red-50/40 transition-colors duration-150">
                         <td className="px-5 py-3"><p className="font-medium text-[var(--text)]">{r.staff.name}</p><p className="text-xs text-[var(--text-muted)]">{r.staff.email}</p></td>
                         <td className="px-5 py-3 text-[var(--text-muted)]">{new Date(r.timestamp).toLocaleString()}</td>
                         <td className="px-5 py-3">
@@ -270,21 +351,35 @@ export default function StaffDashboardPage() {
           </section>
 
           {/* Leave / MC */}
-          <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-6">
-            <h2 className="font-semibold text-[var(--text)] mb-1">Leave / MC application</h2>
-            <p className="text-[var(--text-muted)] text-sm mb-4">Apply for leave or medical certificate (MC).</p>
-            <form onSubmit={submitApplication} className="space-y-4">
+          <section className="surface-card p-6 sm:p-8">
+            <h2 className="font-semibold text-[var(--text)] text-lg mb-1">Leave / MC application</h2>
+            <p className="text-[var(--text-muted)] text-sm mb-6">Apply for leave or medical certificate (MC).</p>
+            <form onSubmit={submitApplication} className="space-y-5">
               <div>
-                <p className="text-sm font-medium text-[var(--text-muted)] mb-2">Type</p>
-                <div className="flex gap-5">
-                  <label className="flex items-center gap-2 cursor-pointer text-[var(--text)] text-sm">
-                    <input type="radio" name="appType" checked={appType === "leave"} onChange={() => setAppType("leave")} className="accent-[var(--staff-accent)] w-4 h-4" />
+                <p className="text-sm font-medium text-[var(--text-muted)] mb-3">Type</p>
+                <div className="inline-flex p-1 rounded-xl bg-gray-100/90 ring-1 ring-gray-200/80 gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setAppType("leave")}
+                    className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--staff-accent)] focus-visible:ring-offset-2 ${
+                      appType === "leave"
+                        ? "bg-white text-[var(--staff-accent)] shadow-md shadow-black/5 ring-1 ring-gray-200/80"
+                        : "text-gray-600 hover:text-[var(--text)]"
+                    }`}
+                  >
                     Leave
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer text-[var(--text)] text-sm">
-                    <input type="radio" name="appType" checked={appType === "mc"} onChange={() => setAppType("mc")} className="accent-[var(--staff-accent)] w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAppType("mc")}
+                    className={`px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--staff-accent)] focus-visible:ring-offset-2 ${
+                      appType === "mc"
+                        ? "bg-white text-[var(--staff-accent)] shadow-md shadow-black/5 ring-1 ring-gray-200/80"
+                        : "text-gray-600 hover:text-[var(--text)]"
+                    }`}
+                  >
                     MC
-                  </label>
+                  </button>
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -301,18 +396,52 @@ export default function StaffDashboardPage() {
                 <label htmlFor="app-reason" className="block mb-1.5 text-sm font-medium text-[var(--text-muted)]">Reason (optional)</label>
                 <textarea id="app-reason" value={appReason} onChange={(e) => setAppReason(e.target.value)} placeholder="e.g. Medical appointment" rows={2} className="input-base resize-none" />
               </div>
-              {appMessage && <p className={`text-sm font-medium ${appMessage.type === "ok" ? "text-[var(--success)]" : "text-[var(--error)]"}`}>{appMessage.text}</p>}
-              <button type="submit" disabled={appLoading} className="w-full py-3 rounded-lg font-semibold text-white bg-[var(--staff-accent)] hover:bg-[var(--staff-accent-hover)] disabled:opacity-50 transition">
-                {appLoading ? "Submitting…" : "Submit application"}
+              {appMessage && (
+                <div
+                  role="status"
+                  className={`rounded-xl px-4 py-3 text-sm font-medium border transition-all duration-300 ${
+                    appMessage.type === "ok"
+                      ? "bg-emerald-50 text-emerald-800 border-emerald-200/80"
+                      : "bg-red-50 text-red-800 border-red-200/80"
+                  }`}
+                >
+                  {appMessage.text}
+                </div>
+              )}
+              <button
+                type="submit"
+                disabled={appLoading}
+                className="btn-press w-full py-3.5 rounded-xl font-semibold text-white bg-[var(--staff-accent)] hover:bg-[var(--staff-accent-hover)] disabled:opacity-50 shadow-lg shadow-red-500/15 hover:shadow-xl transition-all duration-200"
+              >
+                {appLoading ? (
+                  <span className="inline-flex items-center justify-center gap-2">
+                    <svg className="h-5 w-5 animate-spin motion-reduce:animate-none" fill="none" viewBox="0 0 24 24" aria-hidden>
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Submitting…
+                  </span>
+                ) : (
+                  "Submit application"
+                )}
               </button>
             </form>
           </section>
 
           {/* My applications */}
-          <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm overflow-hidden">
-            <div className="flex justify-between items-center px-5 py-4 border-b border-[var(--border)]">
+          <section className="surface-card overflow-hidden">
+            <div className="flex justify-between items-center px-5 py-4 border-b border-[var(--border)] bg-gray-50/50">
               <h2 className="font-semibold text-[var(--text)]">My applications</h2>
-              <button type="button" onClick={fetchApplications} className="text-sm font-medium text-[var(--staff-accent)] hover:underline">Refresh</button>
+              <button
+                type="button"
+                onClick={fetchApplications}
+                className="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--staff-accent)] rounded-lg px-2 py-1 -mr-2 hover:bg-red-50 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--staff-accent)]"
+              >
+                <svg className="h-4 w-4 transition-transform duration-500 group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Refresh
+              </button>
             </div>
             <div className="p-5 max-h-64 overflow-y-auto">
               {myApplications.length === 0 ? (
@@ -320,7 +449,10 @@ export default function StaffDashboardPage() {
               ) : (
                 <ul className="space-y-3">
                   {myApplications.map((a) => (
-                    <li key={a.id} className="p-3 rounded-lg border border-[var(--border)] bg-gray-50/50">
+                    <li
+                      key={a.id}
+                      className="p-4 rounded-xl border border-[var(--border)] bg-gray-50/50 hover:bg-white hover:border-gray-300/80 hover:shadow-md transition-all duration-200"
+                    >
                       <div className="flex justify-between items-start flex-wrap gap-2">
                         <div>
                           <p className="font-medium text-[var(--text)] text-sm">{a.type === "mc" ? "MC" : "Leave"}</p>
@@ -340,7 +472,7 @@ export default function StaffDashboardPage() {
 
         <div className="space-y-4">
           <MiniCalendar />
-          <div className="flex items-center gap-4 p-4 rounded-xl border border-[var(--border)] bg-[var(--staff-card-green)] shadow-sm">
+          <div className="group flex items-center gap-4 p-5 rounded-2xl border border-[var(--border)] bg-[var(--staff-card-green)] shadow-sm transition-all duration-300 hover:shadow-lift hover:-translate-y-0.5">
             <div className="w-10 h-10 rounded-lg bg-[var(--staff-card-green-text)]/20 flex items-center justify-center">
               <svg className="w-5 h-5 text-[var(--staff-card-green-text)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
             </div>
@@ -349,7 +481,7 @@ export default function StaffDashboardPage() {
               <p className="text-sm font-medium text-[var(--staff-card-green-text)]/80">My records today</p>
             </div>
           </div>
-          <div className="flex items-center gap-4 p-4 rounded-xl border border-[var(--border)] bg-[var(--staff-card-yellow)] shadow-sm">
+          <div className="group flex items-center gap-4 p-5 rounded-2xl border border-[var(--border)] bg-[var(--staff-card-yellow)] shadow-sm transition-all duration-300 hover:shadow-lift hover:-translate-y-0.5">
             <div className="w-10 h-10 rounded-lg bg-[var(--staff-card-yellow-text)]/20 flex items-center justify-center">
               <svg className="w-5 h-5 text-[var(--staff-card-yellow-text)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
             </div>
