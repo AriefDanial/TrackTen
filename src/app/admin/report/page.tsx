@@ -80,17 +80,12 @@ export default function AdminReportPage() {
     window.location.href = `/api/admin/report?${q}`;
   };
 
-  const downloadPdf = () => {
-    const q = new URLSearchParams({ from, to, format: "pdf" });
-    window.location.href = `/api/admin/report?${q}`;
-  };
-
   return (
     <>
       <div className="mb-8 max-w-3xl">
         <h1 className="text-2xl sm:text-3xl font-semibold text-[var(--text)] tracking-tight mb-2">Reports</h1>
         <p className="text-[var(--text-muted)] text-sm leading-relaxed">
-          Choose a date range and download a CSV or PDF summary of attendance and leave/MC applications, or preview counts below.
+          Choose a date range and download a CSV summary of attendance and leave/MC applications, or preview counts below.
         </p>
       </div>
 
@@ -145,13 +140,6 @@ export default function AdminReportPage() {
             className="btn-press rounded-xl bg-[var(--admin-accent)] text-white px-4 py-2.5 text-sm font-semibold shadow-lg shadow-red-500/25 hover:brightness-105 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--admin-accent)] focus-visible:ring-offset-2"
           >
             Download CSV
-          </button>
-          <button
-            type="button"
-            onClick={downloadPdf}
-            className="btn-press rounded-xl border-2 border-[var(--admin-accent)] text-[var(--admin-accent)] px-4 py-2.5 text-sm font-semibold hover:bg-[var(--admin-accent)]/10 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--admin-accent)] focus-visible:ring-offset-2"
-          >
-            Download PDF
           </button>
         </div>
         {error && <p className="text-red-600 text-sm mt-3">{error}</p>}
