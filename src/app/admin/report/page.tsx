@@ -80,11 +80,16 @@ export default function AdminReportPage() {
     window.location.href = `/api/admin/report?${q}`;
   };
 
+  const downloadPdf = () => {
+    const q = new URLSearchParams({ from, to, format: "pdf" });
+    window.location.href = `/api/admin/report?${q}`;
+  };
+
   return (
     <>
       <h1 className="text-2xl font-semibold text-[var(--text)] tracking-tight mb-1">Reports</h1>
       <p className="text-[var(--text-muted)] text-sm mb-6">
-        Choose a date range and download a CSV summary of attendance and leave/MC applications, or preview counts below.
+        Choose a date range and download a CSV or PDF summary of attendance and leave/MC applications, or preview counts below.
       </p>
 
       <section className="bg-white rounded-xl border border-[var(--border)] shadow-sm p-5 mb-6 max-w-3xl">
@@ -128,6 +133,13 @@ export default function AdminReportPage() {
             className="rounded-lg bg-[var(--admin-accent)] text-white px-4 py-2 text-sm font-medium hover:opacity-95"
           >
             Download CSV
+          </button>
+          <button
+            type="button"
+            onClick={downloadPdf}
+            className="rounded-lg border border-[var(--admin-accent)] text-[var(--admin-accent)] px-4 py-2 text-sm font-medium hover:bg-[var(--admin-accent)]/10"
+          >
+            Download PDF
           </button>
         </div>
         {error && <p className="text-red-600 text-sm mt-3">{error}</p>}

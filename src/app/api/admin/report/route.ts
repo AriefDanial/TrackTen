@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isAdminAuthenticated, getAdminCookieName } from "@/lib/admin-auth";
+import { buildReportPdf } from "@/lib/report-pdf";
+
+export const runtime = "nodejs";
 
 function getAdminPassword(): string {
   if (process.env.ADMIN_PASSWORD) return process.env.ADMIN_PASSWORD;
@@ -75,6 +78,25 @@ export async function GET(request: Request) {
     ]);
 
     const generatedAt = new Date().toISOString();
+
+    if (format === "pdf") {
+      const pdf = await buildReportPdf({
+        fromStr,
+        toStr,
+        generatedAt,
+        staffCount,
+        attendance,
+        applications,
+      });
+      const filename = `trackten-report_${fromStr}_${toStr}.pdf`;
+      return new NextResponse(new Uint8Array(pdf), {
+        status: 200,
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": `attachment; filename="${filename}"`,
+        },
+      });
+    }
 
     if (format === "csv") {
       const lines: string[] = [];
